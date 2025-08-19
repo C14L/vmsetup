@@ -26,7 +26,9 @@ OVMF_FD="$VMDIR/ovmf-arm.fd"
 ISO="$BASEDIR/debian-13.0.0-arm64-netinst.iso"
 
 if [ ! -f "$HDA" ]; then
-    read -p "Press RETURN to boot VM and install Debian on vm$IP automatically..."
+    # read -p "Press RETURN to boot VM and install Debian on vm$IP automatically..."
+    echo "Booting VM and install Debian on vm$IP automatically..."
+    sleep 5
 
     qemu-img create -f qcow2 "$HDA" 20G
     echo "✅ Created QCOW2 disk for VM $NAME ($IP): $HDA"
@@ -39,11 +41,19 @@ if [ ! -f "$HDA" ]; then
         -drive "format=raw,file=$EDK2_FD,if=pflash,readonly=on" \
         -drive "format=raw,file=$OVMF_FD,if=pflash" \
         -device e1000,netdev=usernet -netdev "user,id=usernet,hostfwd=tcp::${HOSTFWD_PORT}-:22" \
-        -device virtio-gpu-pci
+        -device virtio-gpu-pci &
+    
+    QEMU_PID=$!
+    echo "QEMU PID: $QEMU_PID"
+    # Wait 3 minutes for installation, then kill
+    sleep 180 && kill -9 $QEMU_PID 2>/dev/null &
+    wait $QEMU_PID || true
     exit 0
 fi
 
-read -p "Press RETURN to boot vm$IP normally..."
+echo "Booting existing vm$IP normally..."
+sleep 5
+
 qemu-system-aarch64 -M virt -accel hvf -smp 2 -m 2G -cpu cortex-a72 -nographic \
     -device virtio-scsi-pci,id=scsi -drive file=$HDA,if=none,id=hda-drive,format=qcow2 \
     -device scsi-hd,bus=scsi.0,drive=hda-drive \

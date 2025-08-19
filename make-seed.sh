@@ -13,6 +13,7 @@ for NAME in "$@"; do
 
     # Create preseed.cfg
     cat > "$VMDIR/preseed.cfg" <<EOF
+
 d-i debian-installer/locale string en_US
 d-i console-setup/ask_detect boolean false
 d-i keyboard-configuration/xkb-keymap select us
@@ -60,8 +61,8 @@ d-i preseed/late_command string \
     in-target sh -c "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCaosjt+gQGHQaSoI6Y6Ly5tx4bC3GJ1jzhK/MTisf2tBqICfEJVC4x8xLqso6t6ifmDNo3iNKLOVN7kG51tvERvP+y5cRklS8lAciiavenS0ByKMNSnfcyn71mDZ2UO/Kdu/8B1tEOKWpxDLtEdboKUS2ezhDUPKHp1zNcrFIf0rRb8/mwBrvfTOmraXXlXBI1M1nxh/sLHNWnyN/rIuJnykqMCwE8vO3dMU7JyxU4wrxF3ZqhMF7lUvBMH6z8ZtmpQzeTzh+zAHkMXaNeApH81sCPitsw0qDxxfHPd3QVGqXVoQWzs3KpxpryHmRhVCu84EjerknuAjdkMtvgKNcXG6I66ltCD6KyeQm4Cnf1o63YoMbKAByK1lBXem1wEOUIemvW4fdPEcZOjhWU033Rjr+687oV+/YND0JK/Fei1ObeMKyxn90eUwQPKGviW1MGAp4t0O+y1OCNH+mmUfSclG/dTTMcdLw4HtXcmko9SCxw/47/6VZ/a+/pwzQeO7Teh+DawF2ARrghFTY+geV+J4K2Xmz4FZQXs0f3EDdJSFFYfXl4Xhh8/aGFPsgr2KkCy7+o6qhJrDrtmxixHK5sB+tjoN5xMvIXXUPZW/X0e1g76sq3W2lJoMTP3fx2ECvIZRec0ZqqmKNtEdXqD9V1Vy/e7WQAvTqNbWE2bVVHBQ==' > /home/ubuntu/.ssh/authorized_keys"; \
     in-target chown -R ubuntu:ubuntu /home/ubuntu/.ssh; \
     in-target chmod 700 /home/ubuntu/.ssh; \
-    in-target chmod 600 /home/ubuntu/.ssh/authorized_keys \
-    in-target poweroff
+    in-target chmod 600 /home/ubuntu/.ssh/authorized_keys; \
+    in-target /usr/sbin/poweroff -f
 EOF
 
     # Create custom initrd
