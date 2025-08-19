@@ -1,0 +1,7 @@
+vm???/*
+share/*
+*.iso
+*.qcow2
+*.fd
+initrd.gz
+vmlinuz
